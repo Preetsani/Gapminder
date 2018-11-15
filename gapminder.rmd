@@ -1,0 +1,194 @@
+# Gapminder Dataset
+This dataset has 6 variables and 3,313 records. This dataset is from R built-in
+package gapminder.
+
+# Questions
+1. Which Continent has the highest pop, gdpPercap & lifeExp?
+2. Does pop, lifeExp, gdpPercap increases with passing years?
+
+Packages Required
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+library(gapminder)
+library(ggplot2)
+library(gridExtra)
+library(plotly)
+```
+
+Loading dataset into variable df.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# load the data fom gapminder package
+df <- gapminder_unfiltered
+
+# looking at the dataset
+str(df)
+```
+
+Variables are
+1. country - representing the country's data
+2. continent - represents the continents countries belong to.
+3. year - is the year for which the data was takes for that particular country.
+4. lifeExp - life expectancy in years, of a person born at that given time.
+5. pop - population is the population of the country.
+6. gdpPercap - is gross domestic product divided by population.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# checking for NA's
+sum(is.na(df))
+```
+
+There're no missing records in the dataset.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# viewing first few records of the dataset
+head(df)
+```
+
+Few records from the dataset showing the data.
+
+# Univariate Analysis
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# plotting histogram for lifeExp
+h1 <- ggplot(data = df, aes(x = lifeExp)) +
+  geom_histogram(binwidth = 1) +
+  ggtitle('Life Expectancy Histogram')
+
+# plotting histogram for gdpPercap
+h2 <- ggplot(data = df, aes(x = gdpPercap)) +
+  geom_histogram(binwidth = 1000) +
+  ggtitle('gdpPercap Histogram')
+
+grid.arrange(h1, h2, ncol = 2)
+```
+
+These histograms show the distribution of gdpPercap & lifeExp variables.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# bar chart for coninents
+br1 <- ggplot(data = df, aes(x = continent)) +
+  geom_bar() +
+  ggtitle('Continent Bar Chart')
+
+grid.arrange(br1, ncol = 1)
+```
+
+Europe has highest number of records in the dataset.
+
+# Bivariate Analysis
+
+## Question 1 - Which Continent has the highest pop, gdpPercap & lifeExp?
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# Boxplot for continents with life expectancy
+b1 <- ggplot(data = df, aes(x = continent, y = lifeExp)) +
+  geom_jitter(alpha = 0.3) +
+  geom_boxplot(alpha = 0.5, outlier.colour = "blue") +
+  stat_summary(fun.y = "mean", color = "red", shape = 8, geom = "point") +
+  ggtitle('Continent wise Life Expectancy')
+
+grid.arrange(b1, ncol = 1)
+```
+
+This boxplot depicts that Europe has the highest life expectancy.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# Boxplot for continents with GDP per capita
+b2 <- ggplot(data = df, aes(x = continent, y = gdpPercap)) +
+  geom_jitter(alpha = 0.3) +
+  geom_boxplot(alpha = 0.5, outlier.colour = "blue") +
+  stat_summary(fun.y = "mean", color = "red", shape = 8, geom = "point") +
+  coord_cartesian(ylim = c(240, 40000)) +
+  ggtitle('Continent wise gdpPercap')
+
+grid.arrange(b2, ncol = 1)
+```
+
+This boxplot depicts that Europe has the highest GDP Per Capita.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# Boxplot for continents with population
+b3 <- ggplot(data = df, aes(x = continent, y = pop)) +
+  geom_jitter(alpha = 0.3) +
+  geom_boxplot(alpha = 0.5, outlier.colour = "blue") +
+  stat_summary(fun.y = "mean", color = "red", shape = 8, geom = "point") +
+  ggtitle('Continent wise population')
+
+grid.arrange(b3, ncol = 1)
+```
+
+Asia has the highest population.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+cm <- ggcorr(df[, 3:6], label = TRUE, nbreaks = 4, method = c("all.obs", "spearman"),
+       hjust=0.8, angle=-70, size=4) +
+  ggtitle('Spearman Correlation Coefficient Matrix')
+
+grid.arrange(cm, ncol = 1)
+```
+
+Looking at the coefficient correlation matrix, lifeExp & gdpPercap has the 
+strongest correlation.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# scatter plot for lifeExp vs gdpPercap
+sp1 <- ggplot(data = df, aes(x = lifeExp, y = gdpPercap)) +
+  geom_jitter(alpha = 0.1, color = "orange") +
+  geom_smooth(se = TRUE) +
+  ggtitle('lifeExp vs gdpPercap Scatter Plot')
+
+grid.arrange(sp1, ncol = 1)
+```
+
+This is the strongest relation and gdp increases if life expectancy is 60 
+or greater.
+
+## Question 2 - Does lifeExp, gdpPercap increases with passing years?
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# scatter plot for year vs lifeExp
+sp2 <- ggplot(data = df, aes(x = year, y = lifeExp)) +
+  geom_jitter(alpha = 0.1, color = "orange") +
+  geom_smooth(se = TRUE) +
+  ggtitle('year vs lifeExp Scatter Plot')
+
+grid.arrange(sp2, ncol = 1)
+```
+
+This plot depicts with passing years Life Expectancy is increasing.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# scatter plot for lifeExp vs gdpPercap
+sp3 <- ggplot(data = df, aes(x = year, y = gdpPercap)) +
+  geom_jitter(alpha = 0.1, color = "orange") +
+  geom_smooth(se = TRUE) +
+  scale_y_continuous(limits = c(0,
+                                quantile(df$gdpPercap, probs = 0.95))) +
+  ggtitle('year vs gdpPercap Scatter Plot')
+
+grid.arrange(sp3, ncol = 1)
+```
+
+Here looking at the plot, looks that gdpPercap has weak correlation with years.
+
+# Multivariate Analysis
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# Plotting bubble chart only for year 2007
+m <- df %>%
+  filter(year == 2007) %>%
+  ggplot(aes(x = gdpPercap, y = lifeExp, size = pop, colour = continent)) +
+  geom_point() +
+  scale_x_log10() +
+  theme_bw() +
+  ggtitle("Bubble Chart For Year 2007 gdpPerCap vs lifeExp")
+
+f <- ggplotly(m)
+
+```
+
+This bubble chart is plotted for year 2007, for all the continents.
+Looking at this bubble chart, Europe & Americas have maximum gdpPercap with 
+maximum lifeExp. And it seems like the size of population does not affect the
+gdpPercap.
