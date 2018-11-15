@@ -3,8 +3,8 @@ This dataset has 6 variables and 3,313 records. This dataset is from R built-in
 package gapminder.
 
 # Questions
-1. Which Continent has the highest pop, gdpPercap & lifeExp?
-2. Does pop, lifeExp, gdpPercap increases with passing years?
+(1) Which Continent has the highest pop, gdpPercap & lifeExp?
+(2) Does pop, lifeExp, gdpPercap increases with passing years?
 
 Packages Required
 
@@ -79,6 +79,11 @@ This boxplot depicts that Europe has the highest GDP Per Capita.
 
 Asia has the highest population.
 
+
+```
+## Error in ggcorr(df[, 3:6], label = TRUE, nbreaks = 4, method = c("all.obs", : could not find function "ggcorr"
+```
+
 ![plot of chunk unnamed-chunk-10](figure/unnamed-chunk-10-1.png)
 
 Looking at the coefficient correlation matrix, lifeExp & gdpPercap has the 
@@ -101,12 +106,9 @@ Here looking at the plot, looks that gdpPercap has weak correlation with years.
 
 # Multivariate Analysis
 
-![plot of chunk unnamed-chunk-14](figure/unnamed-chunk-14-1.png)
 
-```
-## Error in gList(structure(list(x = structure(list(data = list(list(x = c(3.79402544509666, : only 'grobs' allowed in "gList"
-```
 
-This bubble chart is plotted only for year 2007, for all the continents.
+This bubble chart is plotted for year 2007, for all the continents.
 Looking at this bubble chart, Europe & Americas have maximum gdpPercap with 
-maximum lifeExp.
+maximum lifeExp. And it seems like the size of population does not affect the
+gdpPercap.
